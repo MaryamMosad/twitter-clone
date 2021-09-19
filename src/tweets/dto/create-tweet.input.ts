@@ -1,7 +1,15 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
+import { Column, ForeignKey } from 'sequelize-typescript';
+import { User } from 'src/users/entities/user.entity';
 
 @InputType()
 export class CreateTweetInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Column
+  @Field()
+  text:string;
+
+  @ForeignKey(type=> User)
+  @Column
+  @Field(() => Int)
+  userId:number;
 }

@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { Repository } from 'sequelize-typescript';
+import { User } from 'src/users/entities/user.entity';
 import { CreateTweetInput } from './dto/create-tweet.input';
-import { UpdateTweetInput } from './dto/update-tweet.input';
+import { Tweet } from './entities/tweet.entity';
 
 @Injectable()
 export class TweetsService {
+  constructor(
+    @InjectModel(User)
+    private userModel: typeof User,
+    @InjectModel(Tweet)
+    private tweetModel: typeof Tweet,
+  ){}
   create(createTweetInput: CreateTweetInput) {
-    return 'This action adds a new tweet';
+    return this.tweetModel.create(createTweetInput) ;
   }
 
-  findAll() {
-    return `This action returns all tweets`;
+  async findAll():Promise<Tweet[]> {
+    return this.tweetModel.findAll();
+    
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tweet`;
+  async findOne(id: number):Promise<Tweet> {
+    const tweet=await this.tweetModel.findOne({where:{tweetId:id}});
+    if(!tweet){
+      throw new NotFoundException();
+    }
+    return tweet ;
   }
 
-  update(id: number, updateTweetInput: UpdateTweetInput) {
-    return `This action updates a #${id} tweet`;
-  }
 
-  remove(id: number) {
+    remove(id: number) {
     return `This action removes a #${id} tweet`;
   }
 }

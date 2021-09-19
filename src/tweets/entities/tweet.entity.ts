@@ -1,6 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Model } from 'sequelize';
-import { Table, Column, ForeignKey } from 'sequelize-typescript';
+import { Model,Table, Column, ForeignKey,BelongsTo } from 'sequelize-typescript';
 import { User } from 'src/users/entities/user.entity';
 
 @Table
@@ -16,10 +15,13 @@ export class Tweet extends Model{
 
   @Column
   @Field()
-  createdAt:Date;
+  createdAt:Date ;
 
-  /*@ForeignKey(type=>User)
+  @ForeignKey(type=> User)
   @Column
   @Field(() => Int)
-  userId:number;*/
+  userId:number;
+
+  @BelongsTo(() => User)
+  user: User
 }

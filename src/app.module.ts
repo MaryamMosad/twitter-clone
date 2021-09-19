@@ -7,9 +7,10 @@ import { FollowRelaionshipsModule } from './follow-relaionships/follow-relaionsh
 import { SequelizeModule } from '@nestjs/sequelize';
 import { GraphQLModule } from '@nestjs/graphql';
 
+
 @Module({
   imports: [GraphQLModule.forRoot({
-    autoSchemaFile:true,
+    autoSchemaFile:'schema.gql',
   })
     ,UsersModule, TweetsModule, FollowRelaionshipsModule,
   SequelizeModule.forRoot({
@@ -21,6 +22,7 @@ import { GraphQLModule } from '@nestjs/graphql';
     database: 'twitterclone',
     models: [],
     autoLoadModels:true,
+    repositoryMode:true,
   })
   ],
   //controllers: [AppController],

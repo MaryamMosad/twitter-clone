@@ -2,7 +2,6 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { TweetsService } from './tweets.service';
 import { Tweet } from './entities/tweet.entity';
 import { CreateTweetInput } from './dto/create-tweet.input';
-import { UpdateTweetInput } from './dto/update-tweet.input';
 
 @Resolver(() => Tweet)
 export class TweetsResolver {
@@ -14,18 +13,13 @@ export class TweetsResolver {
   }
 
   @Query(() => [Tweet], { name: 'tweets' })
-  findAll() {
-    return this.tweetsService.findAll();
+  findTweets() {
+    this.tweetsService.findAll();
   }
 
   @Query(() => Tweet, { name: 'tweet' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findTweet(@Args('id', { type: () => Int }) id: number) {
     return this.tweetsService.findOne(id);
-  }
-
-  @Mutation(() => Tweet)
-  updateTweet(@Args('updateTweetInput') updateTweetInput: UpdateTweetInput) {
-    return this.tweetsService.update(updateTweetInput.id, updateTweetInput);
   }
 
   @Mutation(() => Tweet)

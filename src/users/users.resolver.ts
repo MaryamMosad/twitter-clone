@@ -14,12 +14,12 @@ export class UsersResolver {
   }
 
   @Query(() => [User], { name: 'users' })
-  findAll() {
+  findUsers() {
     return this.usersService.findAll();
   }
 
   @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findUser(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.findOne(id);
   }
 

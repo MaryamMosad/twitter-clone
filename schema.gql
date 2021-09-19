@@ -1,0 +1,79 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Tweet {
+  tweetId: Int!
+  text: String!
+  createdAt: DateTime!
+  userId: Int!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  userId: Int!
+  username: String!
+  email: String!
+  password: String!
+  passwordConfirm: String!
+  tweets: [Tweet!]
+}
+
+type FollowRelaionship {
+  relationshipId: Int!
+}
+
+type Query {
+  users: [User!]!
+  user(id: Int!): User!
+  tweets: [Tweet!]!
+  tweet(id: Int!): Tweet!
+  followRelaionships: [FollowRelaionship!]!
+  followRelaionship(id: Int!): FollowRelaionship!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+  createTweet(createTweetInput: CreateTweetInput!): Tweet!
+  removeTweet(id: Int!): Tweet!
+  createFollowRelaionship(createFollowRelaionshipInput: CreateFollowRelaionshipInput!): FollowRelaionship!
+  updateFollowRelaionship(updateFollowRelaionshipInput: UpdateFollowRelaionshipInput!): FollowRelaionship!
+  removeFollowRelaionship(id: Int!): FollowRelaionship!
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
+  passwordConfirm: String!
+}
+
+input UpdateUserInput {
+  username: String
+  email: String
+  password: String
+  passwordConfirm: String
+  id: Int!
+}
+
+input CreateTweetInput {
+  text: String!
+  userId: Int!
+}
+
+input CreateFollowRelaionshipInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateFollowRelaionshipInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
