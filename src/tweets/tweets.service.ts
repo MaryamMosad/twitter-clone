@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Repository } from 'sequelize-typescript';
 import { User } from 'src/users/entities/user.entity';
@@ -12,26 +12,34 @@ export class TweetsService {
     private userModel: typeof User,
     @InjectModel(Tweet)
     private tweetModel: typeof Tweet,
-  ){}
+  ) { }
   create(createTweetInput: CreateTweetInput) {
-    return this.tweetModel.create(createTweetInput) ;
+    return this.tweetModel.create(createTweetInput);
   }
 
-  async findAll():Promise<Tweet[]> {
-    return this.tweetModel.findAll();
-    
-  }
-
-  async findOne(id: number):Promise<Tweet> {
-    const tweet=await this.tweetModel.findOne({where:{tweetId:id}});
-    if(!tweet){
-      throw new NotFoundException();
+  async tweetFinder(model ,...args ){
+    const tweet = await model.findOne(...args)
+    if (!tweet) {
+      throw new NotFoundException;
     }
-    return tweet ;
+    return tweet;
+  }
+
+  async findAll(): Promise<Tweet[]> {
+    return this.tweetModel.findAll();
   }
 
 
-    remove(id: number) {
-    return `This action removes a #${id} tweet`;
+  async findOne(id: number): Promise<Tweet> {
+    return this.tweetFinder(this.tweetModel,{ where: { tweetId: id } })
+  }
+
+
+  async remove(userId:number,tweetId: number) {
+    const tweet=await this.tweetFinder(this.tweetModel,{ where: {tweetId:tweetId} })
+    if (userId===tweet.userId)
+    {return await this.tweetModel.destroy({ where: { tweetId: tweetId } })}
+    else 
+    throw new ForbiddenException;
   }
 }

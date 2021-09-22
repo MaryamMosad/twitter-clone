@@ -14,7 +14,7 @@ export class TweetsResolver {
 
   @Query(() => [Tweet], { name: 'tweets' })
   findTweets() {
-    this.tweetsService.findAll();
+    return this.tweetsService.findAll();
   }
 
   @Query(() => Tweet, { name: 'tweet' })
@@ -22,8 +22,10 @@ export class TweetsResolver {
     return this.tweetsService.findOne(id);
   }
 
-  @Mutation(() => Tweet)
-  removeTweet(@Args('id', { type: () => Int }) id: number) {
-    return this.tweetsService.remove(id);
+  @Mutation(() => String)
+  async removeTweet(@Args('id', { type: () => Int }) id: number,
+  @Args('userId', { type: () => Int }) userId: number) {
+    await this.tweetsService.remove(userId,id);
+    return "Tweet deleted"
   }
 }

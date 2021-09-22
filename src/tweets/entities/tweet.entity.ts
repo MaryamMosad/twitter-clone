@@ -10,11 +10,9 @@ export class Tweet extends Model{
   tweetId: number;
 
   @Column
-  @Field()
   text:string;
 
   @Column
-  @Field()
   createdAt:Date ;
 
   @ForeignKey(type=> User)

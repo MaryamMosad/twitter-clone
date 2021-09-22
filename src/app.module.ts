@@ -3,16 +3,19 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TweetsModule } from './tweets/tweets.module';
-import { FollowRelaionshipsModule } from './follow-relaionships/follow-relaionships.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { GraphQLModule } from '@nestjs/graphql';
+import { FollowModule } from './follow/follow.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth/auth.guard';
+import { AuthService } from './auth/auth.service';
 
 
 @Module({
   imports: [GraphQLModule.forRoot({
     autoSchemaFile:'schema.gql',
   })
-    ,UsersModule, TweetsModule, FollowRelaionshipsModule,
+    ,UsersModule, TweetsModule, FollowModule,
   SequelizeModule.forRoot({
     dialect: 'postgres',
     host: 'localhost',
@@ -23,9 +26,14 @@ import { GraphQLModule } from '@nestjs/graphql';
     models: [],
     autoLoadModels:true,
     repositoryMode:true,
-  })
+  }),
+  FollowModule,
+  AuthModule
   ],
   //controllers: [AppController],
-  providers: [AppService],
+ /* providers: [AppService,
+  {provide:'AuthGuard',
+  useClass:AuthGuard,
+}],*/
 })
 export class AppModule {}
