@@ -16,9 +16,10 @@ export class TweetsService {
   create(createTweetInput: CreateTweetInput) {
     return this.tweetModel.create(createTweetInput);
   }
-
-  async tweetFinder(model ,...args ){
-    const tweet = await model.findOne(...args)
+//a function to find tweets where we can pass different arguments
+//it can be used later in other functions instead of returning error message everytime we can't find a tweet
+  async tweetFinder(...args ){
+    const tweet = await this.tweetModel.findOne(...args)
     if (!tweet) {
       throw new NotFoundException;
     }
@@ -40,11 +41,11 @@ export class TweetsService {
   }
 
   async findOne(id: number): Promise<Tweet> {
-    return this.tweetFinder(this.tweetModel,{ where: { tweetId: id } })
+    return this.tweetFinder({ where: { tweetId: id } })
   }
 
   async remove(userId:number,tweetId: number) {
-    const tweet=await this.tweetFinder(this.tweetModel,{ where: {tweetId:tweetId} })
+    const tweet=await this.tweetFinder({ where: {tweetId:tweetId} })
     if (userId===tweet.userId)
     {return await this.tweetModel.destroy({ where: { tweetId: tweetId } })}
     else 

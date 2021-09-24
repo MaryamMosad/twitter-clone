@@ -27,8 +27,8 @@ export class UsersService {
 
   }
   //A function to find a single user , used for multiple purposes to prevent repeating code
-  async userFinder(model, ...args) {
-    const user = await model.findOne(...args)
+  async userFinder(...args) {
+    const user = await this.userModel.findOne(...args)
     if (!user) {
       throw new NotFoundException("This user doesn't exist");
     }
@@ -50,7 +50,7 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<User> {
-    return await this.userFinder(this.userModel, {
+    return await this.userFinder({
       where: { userId: id },
       include:
         [{ model: this.tweetModel }, {
@@ -63,7 +63,7 @@ export class UsersService {
 
   async update(id: number, updateUserInput: UpdateUserInput) {
   await this.userModel.update(updateUserInput, { where: { userId: id } });
-  return await this.userFinder(this.userModel, { where: { userId: id } })
+  return await this.userFinder({ where: { userId: id } })
 }
 
 

@@ -12,6 +12,7 @@ export class FollowService {
     private userModel: typeof User,
   ) { }
 
+  //create new follow entry if it doesn't exist and delete if it exists
   async create(createFollowInput) {
     const followStatus = await this.followModel.findOne({ where: { followerId:createFollowInput.followerId, followingId:createFollowInput.followingId } });
     if (followStatus){
@@ -31,10 +32,10 @@ export class FollowService {
       }
     ],limit:limit,offset:offset})
   }
+
+  //retuens userIds for followed people
   async findUserFollowings(args,id: number): Promise<Follow[]> {
     const { limit, offset } = args;
     return this.followModel.findAll({ where: { followerId: id },limit:limit,offset:offset})
   }
-
-  
 }
