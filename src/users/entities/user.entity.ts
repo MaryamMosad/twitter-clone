@@ -35,6 +35,7 @@ export class User extends Model {
   @Field(() => [Tweet], { nullable: true })
   tweets?: Tweet[];
 
+  //removed Field() As I'm using graphql Plugin that generates it on compile
   @BelongsToMany(() => User, () => Follow, 'followingId')
   followers?: User[];
 
