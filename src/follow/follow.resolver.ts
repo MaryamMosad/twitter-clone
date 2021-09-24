@@ -2,32 +2,30 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { FollowService } from './follow.service';
 import { Follow } from './entities/follow.entity';
 import { CreateFollowInput } from './dto/create-follow.input';
-import { UpdateFollowInput } from './dto/update-follow.input';
-import { HttpCode, HttpStatus } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { PaginationArgs } from 'src/common/pagination-args.dto';
 
+
+@UseGuards(AuthGuard)
 @Resolver(() => Follow)
 export class FollowResolver {
   constructor(private readonly followService: FollowService) {}
 
   @Mutation(() => Follow)
-  Follow(@Args('createFollowInput') createFollowInput: CreateFollowInput) {
+  Follow_Unfollow(@Args('createFollowInput') createFollowInput: CreateFollowInput) {
     return this.followService.create(createFollowInput);
   }
 
-  @Query(() => [Follow], { name: 'follow' })
-  findAll() {
-    return this.followService.findAll();
+  @Query(() => [Follow], { name: 'UserFollowers' })
+  Followers(@Args() args: PaginationArgs,
+    @Args('id', { type: () => Int }) id: number){
+    return this.followService.findUserFollowers(args,id);
   }
-
-  @Query(() => Follow, { name: 'follow' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.followService.findOne(id);
+  @Query(() => [Follow], { name: 'UserFollowings' })
+  Followings(@Args() args: PaginationArgs,
+  @Args('id', { type: () => Int }) id: number){
+    return this.followService.findUserFollowings(args,id);
   }
-
-
-  @Mutation(() => String)
-  async Unfollow(@Args('id', { type: () => Int }) id: number) {
-    await this.followService.remove(id);
-    return 'Successfully Deleted';
-  }
+  
 }

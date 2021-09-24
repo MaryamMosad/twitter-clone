@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, ResolveField } from '@nestjs/graphql';
 import { IsEmail, IsString } from 'class-validator';
 import { Model, AutoIncrement, Column, DataType, HasMany, Table, BeforeCreate, BelongsToMany } from 'sequelize-typescript';
 import { Tweet } from 'src/tweets/entities/tweet.entity';
@@ -31,7 +31,6 @@ export class User extends Model {
   @Column
   passwordConfirm: string;
 
-  
   @HasMany(() => Tweet)
   @Field(() => [Tweet], { nullable: true })
   tweets?: Tweet[];
@@ -41,10 +40,6 @@ export class User extends Model {
 
   @BelongsToMany(() => User, () => Follow, 'followerId')
   followings?: User[];
-
-  @Column
-  token?: string;
-
 
   @BeforeCreate
   public static async hashPassword(user: User) {

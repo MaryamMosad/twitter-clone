@@ -7,6 +7,7 @@ import { Tweet } from 'src/tweets/entities/tweet.entity';
 import { Follow } from 'src/follow/entities/follow.entity';
 
 
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -26,15 +27,16 @@ export class UsersService {
 
   }
   //A function to find a single user , used for multiple purposes to prevent repeating code
-  async userFinder(model ,...args ){
+  async userFinder(model, ...args) {
     const user = await model.findOne(...args)
     if (!user) {
-      throw new NotFoundException;
+      throw new NotFoundException("This user doesn't exist");
     }
     return user;
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(args): Promise<User[]> {
+    const { limit, offset } = args;
     return this.userModel.findAll({
       include: [{ model: this.tweetModel }, {
         model: this.userModel,
@@ -43,29 +45,30 @@ export class UsersService {
       {
         model: this.userModel,
         as: 'followings'
-      }]
+      }],limit:limit,offset:offset
     });
   }
 
   async findOne(id: number): Promise<User> {
-    return await this.userFinder(this.userModel,{
+    return await this.userFinder(this.userModel, {
       where: { userId: id },
       include:
         [{ model: this.tweetModel }, {
           model: this.userModel,
           as: 'followers',
-        }]
+        }
+      ]
       })
-  }
+}
 
   async update(id: number, updateUserInput: UpdateUserInput) {
-    await this.userModel.update(updateUserInput, { where: { userId: id } });
-    return await this.userFinder(this.userModel,{ where: { userId: id } })
-  }
+  await this.userModel.update(updateUserInput, { where: { userId: id } });
+  return await this.userFinder(this.userModel, { where: { userId: id } })
+}
 
 
   async remove(id: number) {
-    await this.userFinder(this.userModel,{ where: { userId: id } })
-      return await this.userModel.destroy({ where: { userId: id } })
-  }
+  await this.userFinder(this.userModel, { where: { userId: id } })
+  return await this.userModel.destroy({ where: { userId: id } })
+}
 }

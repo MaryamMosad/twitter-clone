@@ -14,7 +14,7 @@ JwtModule.register({
   secret:'SecretKEYYY',
   signOptions:{expiresIn:'1d'}
 })] ,
-  providers: [AuthService,UsersService],
+  providers: [AuthService,UsersService,AuthGuard],
   exports:[AuthService,AuthModule,AuthGuard],
 })
 export class AuthModule {}

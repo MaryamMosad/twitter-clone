@@ -1,9 +1,6 @@
-import { ForbiddenException, GoneException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { GoneException,Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { create } from 'domain';
-import { STATUS_CODES } from 'http';
-import { CreateFollowInput } from './dto/create-follow.input';
-import { UpdateFollowInput } from './dto/update-follow.input';
+import { User } from 'src/users/entities/user.entity';
 import { Follow } from './entities/follow.entity';
 
 @Injectable()
@@ -11,32 +8,32 @@ export class FollowService {
   constructor(
     @InjectModel(Follow)
     private followModel: typeof Follow,
+    @InjectModel(User)
+    private userModel: typeof User,
   ) { }
 
-  async create(createFollowInput: CreateFollowInput) {
-    const followStatus = await this.followModel.findOne({ where: { followerId: createFollowInput.followerId, followingId: createFollowInput.followingId } });
+  async create(createFollowInput) {
+    const followStatus = await this.followModel.findOne({ where: { followerId:createFollowInput.followerId, followingId:createFollowInput.followingId } });
     if (followStatus){
-      throw new ForbiddenException;    
-    }
+      await this.followModel.destroy({where:{followId:followStatus.followId}})
+      throw new GoneException;
+        }
     else{
       return await this.followModel.create(createFollowInput);
     }
   }
-  async remove(id: number) {
-    const follow=await this.followModel.findOne({where:{followId:id}})
-    if(!follow){
-      throw new NotFoundException;
-    }
-    else
-    return this.followModel.destroy({where:{followId:id}})
-    
+  async findUserFollowers(args,id: number): Promise<Follow[]> {
+    const { limit, offset } = args;
+    return this.followModel.findAll({ where: { followingId: id } ,include:
+      [{
+        model: this.userModel,
+        as: 'follower',
+      }
+    ],limit:limit,offset:offset})
   }
-  findAll() {
-    return this.followModel.findAll();
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} follow`;
+  async findUserFollowings(args,id: number): Promise<Follow[]> {
+    const { limit, offset } = args;
+    return this.followModel.findAll({ where: { followerId: id },limit:limit,offset:offset})
   }
 
   

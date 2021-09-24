@@ -1,6 +1,5 @@
 import { BadRequestException, CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -23,12 +22,11 @@ export class AuthGuard implements CanActivate {
       if (type !== 'Bearer') {
         throw new BadRequestException(`Authentication type \'Bearer\' required. Found \'${type}\'`);
       }
-      const { isValid, user } = await this.authService.validateToken(token);
-  
+      const { isValid, user } = await this.authService.validateToken(token);  
       if (isValid) {
         req.user = user;
         return true;
-      }
+      }else 
       throw new UnauthorizedException('Token not valid');
     }
 }

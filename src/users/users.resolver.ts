@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int, ObjectType } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ObjectType, Parent, ResolveField } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
@@ -7,11 +7,16 @@ import { AuthService } from 'src/auth/auth.service';
 import { forwardRef, Inject, UseGuards } from '@nestjs/common';
 import { AuthPayload } from './dto/AuthPayload';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { CurrentUser } from '../common/user.decorator';
+import {PaginationArgs} from '../common/pagination-args.dto'
+
 
 
 @Resolver(of => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService,
+    /*@Inject(forwardRef(() => AuthService))
+    private tweetsService: TweetsService,*/
     @Inject(forwardRef(() => AuthService))
     private authService: AuthService,) { }
 
@@ -26,25 +31,33 @@ export class UsersResolver {
   }
 
   @Query(() => [User], { name: 'users' })
-  findUsers() {
-    return this.usersService.findAll();
+  findUsers(@Args() args: PaginationArgs) {
+    return this.usersService.findAll(args);
   }
-
-  
-  @UseGuards(AuthGuard)
   @Query(() => User, { name: 'user' })
   findUser(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.findOne(id);
-  }
+    }
 
+  @UseGuards(AuthGuard)
+  @Query(() => User)
+  async Profile(@CurrentUser()  user: User) {
+    return this.usersService.findOne(user.userId);
+  }
+  
+
+  @UseGuards(AuthGuard)
   @Mutation(() => User)
   updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
     return this.usersService.update(updateUserInput.id, updateUserInput);
   }
-
+  
+  
+  @UseGuards(AuthGuard)
   @Mutation(() => String)
-  async removeUser(@Args('id', { type: () => Int }) id: number) {
-    await this.usersService.remove(id);
+  async removeUser(@CurrentUser()  user: User) {
+    await this.usersService.remove(user.userId);
     return 'Successfully Deleted'
   }
+  
 }

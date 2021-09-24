@@ -19,6 +19,9 @@ export class AuthService {
         const user = await this.userService.userFinder(this.userModel, { where: { username: username } });
         const passwordmatch = await bcrypt.compare(pass, user.password)
         const payload = { username: user.username, sub: user.userId };
+        if(!passwordmatch){
+            return new Error('Please enter a valid Password')
+        }
         if (user && passwordmatch) {
             const token = this.jwtService.sign(payload);
             return { user, token };
@@ -29,7 +32,7 @@ export class AuthService {
     async validateToken(token: string): Promise<any> {
         try {
             const { userId } = this.jwtService.verify(token)
-            const user = await this.userService.userFinder({ where: { userId: userId } });
+            const user = await this.userService.userFinder(this.userModel,{ where: { userId: 7 } });
             return { user, isValid: true }
         } catch (err) {
             return { isValid: false };

@@ -32,7 +32,6 @@ type User {
   passwordConfirm: String!
   followers: [User!]
   followings: [User!]
-  token: String
 }
 
 type AuthPayload {
@@ -41,22 +40,24 @@ type AuthPayload {
 }
 
 type Query {
-  users: [User!]!
+  users(offset: Int = 0, limit: Int = 10): [User!]!
   user(id: Int!): User!
-  tweets: [Tweet!]!
+  Profile: User!
+  tweets(offset: Int = 0, limit: Int = 10): [Tweet!]!
+  UserTweets(id: Int!): [Tweet!]!
   tweet(id: Int!): Tweet!
-  follow(id: Int!): Follow!
+  UserFollowers(id: Int!, offset: Int = 0, limit: Int = 10): [Follow!]!
+  UserFollowings(id: Int!, offset: Int = 0, limit: Int = 10): [Follow!]!
 }
 
 type Mutation {
   signUp(createUserInput: CreateUserInput!): User!
   login(password: String!, username: String!): AuthPayload!
   updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): String!
+  removeUser: String!
   createTweet(createTweetInput: CreateTweetInput!): Tweet!
-  removeTweet(userId: Int!, id: Int!): String!
-  Follow(createFollowInput: CreateFollowInput!): Follow!
-  Unfollow(id: Int!): String!
+  removeTweet(id: Int!): String!
+  Follow_Unfollow(createFollowInput: CreateFollowInput!): Follow!
 }
 
 input CreateUserInput {
