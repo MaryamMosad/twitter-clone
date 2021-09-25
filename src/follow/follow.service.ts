@@ -33,7 +33,7 @@ export class FollowService {
     ],limit:limit,offset:offset})
   }
   
-  //retuens userIds for followed people
+//retuens userIds for followed people
   async findUserFollowings(args,id: number): Promise<Follow[]> {
     const { limit, offset } = args;
     return this.followModel.findAll({ where: { followerId: id },limit:limit,offset:offset})

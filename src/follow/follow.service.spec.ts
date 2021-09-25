@@ -1,9 +1,9 @@
 import { getModelToken } from '@nestjs/sequelize';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Tweet } from '../tweets/entities/tweet.entity';
 import { User } from '../users/entities/user.entity';
 import { FollowService } from './follow.service';
 
-const testUser = { userId:1 ,username: 'Test', email:'test@gmail.com', password: 'Russian Blue' };
 
 describe('FollowService', () => {
   let service: FollowService;
@@ -12,13 +12,13 @@ describe('FollowService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [FollowService, {
         provide: getModelToken(User),
-        useValue: {
-          findAll: jest.fn(() => [testUser]),
-          create: jest.fn(() => testUser),
-        },
-      },],
+        useValue:{}
+      },{
+        provide: getModelToken(Tweet),
+        useValue:{}
+      }],
     }).compile();
-
+    
     service = module.get<FollowService>(FollowService);
   });
 
