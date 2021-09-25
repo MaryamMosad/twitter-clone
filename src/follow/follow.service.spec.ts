@@ -1,7 +1,7 @@
 import { getModelToken } from '@nestjs/sequelize';
 import { Test, TestingModule } from '@nestjs/testing';
-import { FollowService } from './follow.service';
 import { User } from '../users/entities/user.entity';
+import { FollowService } from './follow.service';
 
 const testUser = { userId:1 ,username: 'Test', email:'test@gmail.com', password: 'Russian Blue' };
 

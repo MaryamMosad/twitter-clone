@@ -4,7 +4,6 @@ import * as bcrypt from 'bcryptjs'
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { AuthPayload } from 'src/users/dto/AuthPayload';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +15,7 @@ export class AuthService {
         private jwtService: JwtService
     ) { }
     async validateUser(username: String, pass: String): Promise<any> {
-        const user = await this.userService.userFinder(this.userModel, { where: { username: username } });
+        const user = await this.userService.userFinder({ where: { username: username } });
         const passwordmatch = await bcrypt.compare(pass, user.password)
         const payload = { username: user.username, sub: user.userId };
         if(!passwordmatch){

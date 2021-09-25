@@ -32,7 +32,6 @@ export class FollowService {
       }
     ],limit:limit,offset:offset})
   }
-
   
   //retuens userIds for followed people
   async findUserFollowings(args,id: number): Promise<Follow[]> {
