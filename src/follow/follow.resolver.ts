@@ -3,8 +3,8 @@ import { FollowService } from './follow.service';
 import { Follow } from './entities/follow.entity';
 import { CreateFollowInput } from './dto/create-follow.input';
 import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { PaginationArgs } from 'src/common/pagination-args.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { PaginationArgs } from '../common/pagination-args.dto';
 
 
 @UseGuards(AuthGuard)

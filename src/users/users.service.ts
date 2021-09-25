@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
-import { Tweet } from 'src/tweets/entities/tweet.entity';
-import { Follow } from 'src/follow/entities/follow.entity';
+import { Tweet } from '../tweets/entities/tweet.entity';
+import { Follow } from '../follow/entities/follow.entity';
 
 
 

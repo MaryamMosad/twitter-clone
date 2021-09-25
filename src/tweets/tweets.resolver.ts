@@ -3,10 +3,10 @@ import { TweetsService } from './tweets.service';
 import { Tweet } from './entities/tweet.entity';
 import { CreateTweetInput } from './dto/create-tweet.input';
 import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { CurrentUser } from 'src/common/user.decorator';
-import { User } from 'src/users/entities/user.entity';
-import { PaginationArgs } from 'src/common/pagination-args.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { CurrentUser } from '../common/user.decorator';
+import { User } from '../users/entities/user.entity';
+import { PaginationArgs } from '../common/pagination-args.dto';
 
 @Resolver(() => Tweet)
 export class TweetsResolver {

@@ -1,9 +1,9 @@
 import { ObjectType, Field, Int, ResolveField } from '@nestjs/graphql';
 import { IsEmail, IsString } from 'class-validator';
 import { Model, AutoIncrement, Column, DataType, HasMany, Table, BeforeCreate, BelongsToMany } from 'sequelize-typescript';
-import { Tweet } from 'src/tweets/entities/tweet.entity';
+import { Tweet } from '../../tweets/entities/tweet.entity';
 import * as bcrypt from 'bcryptjs'
-import { Follow } from 'src/follow/entities/follow.entity';
+import { Follow } from '../../follow/entities/follow.entity';
 
 
 @Table

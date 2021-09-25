@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Follow } from 'src/follow/entities/follow.entity';
-import { Tweet } from 'src/tweets/entities/tweet.entity';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { Follow } from '../follow/entities/follow.entity';
+import { Tweet } from '../tweets/entities/tweet.entity';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 

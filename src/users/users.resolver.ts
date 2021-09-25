@@ -3,10 +3,10 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 import { forwardRef, Inject, UseGuards } from '@nestjs/common';
 import { AuthPayload } from './dto/AuthPayload';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../common/user.decorator';
 import {PaginationArgs} from '../common/pagination-args.dto'
 
