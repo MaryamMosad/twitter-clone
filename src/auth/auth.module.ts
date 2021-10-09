@@ -12,8 +12,8 @@ import { AuthService } from './auth.service';
   imports:[SequelizeModule.forFeature([User,Tweet,Follow]),
 JwtModule.register({
   secret:'SecretKEYYY',
-  signOptions:{expiresIn:'1d'}
-})] ,
+  signOptions:{expiresIn:'12h'}
+})],
   providers: [AuthService,UsersService,AuthGuard],
   exports:[AuthService,AuthModule,AuthGuard],
 })

@@ -30,8 +30,8 @@ export class AuthService {
 
     async validateToken(token: string): Promise<any> {
         try {
-            const { userId } = this.jwtService.verify(token)
-            const user = await this.userService.userFinder({ where: { userId: 7 } });
+            const { sub } = this.jwtService.verify(token)
+            const user = await this.userService.userFinder({ where: { userId: sub } });
             return { user, isValid: true }
         } catch (err) {
             return { isValid: false };
