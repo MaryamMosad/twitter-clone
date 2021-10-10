@@ -6,17 +6,19 @@ import { User } from './entities/user.entity';
 import { Tweet } from '../tweets/entities/tweet.entity';
 import { Follow } from '../follow/entities/follow.entity';
 import { AuthService } from '../auth/auth.service';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { AuthModule } from '../auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from '../auth/auth.guard';
+import { TweetsModule } from '../tweets/tweets.module';
+import { TweetsService } from '../tweets/tweets.service';
+import { FollowService } from '../follow/follow.service';
 
 @Module({
   imports:[SequelizeModule.forFeature([User,Tweet,Follow]),
   JwtModule.register({
     secret:'SecretKEYYY',
     signOptions:{expiresIn:'333360s'}
-  }),AuthModule],
-  providers: [UsersResolver, UsersService,AuthService,AuthGuard,],
+  }),TweetsModule],
+  providers: [UsersResolver, UsersService,AuthService,AuthGuard,TweetsService,FollowService],
   exports:[UsersService,UsersModule,]
 })
 export class UsersModule {}
