@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs'
 import { InjectModel } from '@nestjs/sequelize';
@@ -8,17 +8,15 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
     constructor(
-        @Inject(forwardRef(() => UsersService))
         private userService: UsersService,
         @InjectModel(User)
-        private userModel: typeof User,
         private jwtService: JwtService
     ) { }
     async validateUser(username: String, pass: String): Promise<any> {
         const user = await this.userService.userFinder({ where: { username: username } });
         const passwordmatch = await bcrypt.compare(pass, user.password)
         const payload = { username: user.username, sub: user.userId };
-        if(!passwordmatch){
+        if (!passwordmatch) {
             return new Error('Please enter a valid Password')
         }
         if (user && passwordmatch) {

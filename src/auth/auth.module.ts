@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Follow } from '../follow/entities/follow.entity';
 import { Tweet } from '../tweets/entities/tweet.entity';
@@ -9,12 +9,12 @@ import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
 @Module({
-  imports:[SequelizeModule.forFeature([User,Tweet,Follow]),
-JwtModule.register({
-  secret:'SecretKEYYY',
-  signOptions:{expiresIn:'12h'}
-})],
-  providers: [AuthService,UsersService,AuthGuard],
-  exports:[AuthService,AuthModule,AuthGuard],
+  imports: [SequelizeModule.forFeature([User, Tweet, Follow]),
+  JwtModule.register({
+    secret: 'SecretKEYYY',
+    signOptions: { expiresIn: '12h' }
+  })],
+  providers: [AuthService, UsersService, AuthGuard],
+  exports: [AuthService, AuthGuard],
 })
-export class AuthModule {}
+export class AuthModule { }

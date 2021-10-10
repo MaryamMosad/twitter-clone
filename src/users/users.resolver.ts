@@ -4,7 +4,7 @@ import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { AuthService } from '../auth/auth.service';
-import { forwardRef, Inject, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { AuthPayload } from './dto/AuthPayload';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser } from '../common/user.decorator';
@@ -17,11 +17,8 @@ import { GqlUserResponse } from '../common/Response.type';
 @Resolver(of => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService,
-    @Inject(forwardRef(() => TweetsService))
     private tweetsService: TweetsService,
-    @Inject(forwardRef(() => AuthService))
     private authService: AuthService,
-    @Inject(forwardRef(() => FollowService))
     private followService: FollowService) { }
 
   @Mutation(() => User)
@@ -58,12 +55,12 @@ export class UsersResolver {
   }
 
   @ResolveField()
-  async followers(@Parent() user: User ) {
+  async followers(@Parent() user: User) {
     const { userId } = user;
     return this.followService.findUserFollowers(userId);
   }
   @ResolveField()
-  async followings(@Parent() user: User ) {
+  async followings(@Parent() user: User) {
     const { userId } = user;
     return this.followService.findUserFollowings(userId);
   }

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Mutation, Args } from '@nestjs/graphql';
 import { FollowService } from './follow.service';
 import { Follow } from './entities/follow.entity';
 import { CreateFollowInput } from './dto/create-follow.input';
@@ -10,7 +10,7 @@ import { PaginationArgs } from '../common/pagination-args.dto';
 @UseGuards(AuthGuard)
 @Resolver(() => Follow)
 export class FollowResolver {
-  constructor(private readonly followService: FollowService) {}
+  constructor(private readonly followService: FollowService) { }
 
   @Mutation(() => Follow)
   Follow_Unfollow(@Args('createFollowInput') createFollowInput: CreateFollowInput) {
