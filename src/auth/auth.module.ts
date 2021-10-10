@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Follow } from '../follow/entities/follow.entity';
@@ -8,6 +8,7 @@ import { UsersService } from '../users/users.service';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
+@Global()
 @Module({
   imports: [SequelizeModule.forFeature([User, Tweet, Follow]),
   JwtModule.register({
