@@ -40,20 +40,26 @@ type AuthPayload {
 }
 
 type Query {
-  users(offset: Int = 0, limit: Int = 10): [User!]!
-  user(id: Int!): User!
-  Profile: User!
+  users(offset: Int = 0, limit: Int = 10): GqlUserResponse!
+  user(id: Int!): GqlUserResponse!
+  Profile: GqlUserResponse!
   tweets(offset: Int = 0, limit: Int = 10): [Tweet!]!
   UserTweets(id: Int!): [Tweet!]!
   tweet(id: Int!): Tweet!
-  UserFollowers(id: Int!, offset: Int = 0, limit: Int = 10): [Follow!]!
-  UserFollowings(id: Int!, offset: Int = 0, limit: Int = 10): [Follow!]!
+}
+
+type GqlUserResponse {
+  data: User
+  dataArray: [User!]
+  total: Int!
+  statusCode: Int!
+  message: String!
 }
 
 type Mutation {
   signUp(createUserInput: CreateUserInput!): User!
   login(password: String!, username: String!): AuthPayload!
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): GqlUserResponse!
   removeUser: String!
   createTweet(createTweetInput: CreateTweetInput!): Tweet!
   removeTweet(id: Int!): String!

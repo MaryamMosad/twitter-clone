@@ -23,19 +23,18 @@ export class FollowService {
       return await this.followModel.create(createFollowInput);
     }
   }
-  async findUserFollowers(args,id: number): Promise<Follow[]> {
-    const { limit, offset } = args;
-    return this.followModel.findAll({ where: { followingId: id } ,include:
-      [{
-        model: this.userModel,
-        as: 'follower',
-      }
-    ],limit:limit,offset:offset})
+  async findUserFollowers(id: number): Promise<Follow[]> {
+    //const { limit, offset } = args;
+    return this.followModel.findAll({ where: { followingId: id }
+    ,//limit:limit,offset:offset
+  })
   }
   
 //retuens userIds for followed people
-  async findUserFollowings(args,id: number): Promise<Follow[]> {
-    const { limit, offset } = args;
-    return this.followModel.findAll({ where: { followerId: id },limit:limit,offset:offset})
+  async findUserFollowings(id: number): Promise<Follow[]> {
+    //const { limit, offset } = args;
+    return this.followModel.findAll({ where: { followerId: id }
+      //limit:limit,offset:offset
+    })
   }
 }

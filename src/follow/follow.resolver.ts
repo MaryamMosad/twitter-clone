@@ -17,15 +17,15 @@ export class FollowResolver {
     return this.followService.create(createFollowInput);
   }
 
-  @Query(() => [Follow], { name: 'UserFollowers' })
+  /*@Query(() => [Follow], { name: 'UserFollowers' })
   Followers(@Args() args: PaginationArgs,
     @Args('id', { type: () => Int }) id: number){
-    return this.followService.findUserFollowers(args,id);
+    return this.followService.findUserFollowers(id);
   }
   @Query(() => [Follow], { name: 'UserFollowings' })
   Followings(@Args() args: PaginationArgs,
   @Args('id', { type: () => Int }) id: number){
-    return this.followService.findUserFollowings(args,id);
+    return this.followService.findUserFollowings(id);
   }
-  
+  */
 }

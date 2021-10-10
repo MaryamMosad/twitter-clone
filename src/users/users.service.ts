@@ -1,11 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpCode, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import { Tweet } from '../tweets/entities/tweet.entity';
 import { Follow } from '../follow/entities/follow.entity';
-
 
 
 @Injectable()
@@ -35,40 +34,36 @@ export class UsersService {
     return user;
   }
 
-  async findAll(args): Promise<User[]> {
+  async findAll(args): Promise<any> {
     const { limit, offset } = args;
-    return this.userModel.findAll({
-      include: [{ model: this.tweetModel }, {
-        model: this.userModel,
-        as: 'followers',
-      },
-      {
-        model: this.userModel,
-        as: 'followings'
-      }],limit:limit,offset:offset
+    const dataArray=await this.userModel.findAll({
+      limit: limit, offset: offset
     });
+    const total=dataArray.length;
+    return {dataArray,total, statusCode:HttpStatus.FOUND,message:"All users found"}
   }
 
-  async findOne(id: number): Promise<User> {
-    return await this.userFinder({
+  async findOne(id: number): Promise<any> {
+    const data= await this.userFinder({
       where: { userId: id },
-      include:
-        [{ model: this.tweetModel }, {
+      /*include:
+        [{
           model: this.userModel,
           as: 'followers',
         }
-      ]
+      ]*/
       })
+      return{data,total:1, statusCode:600,message:"User found"}
 }
 
   async update(id: number, updateUserInput: UpdateUserInput) {
-  await this.userModel.update(updateUserInput, { where: { userId: id } });
-  return await this.userFinder({ where: { userId: id } })
-}
+    await this.userModel.update(updateUserInput, { where: { userId: id } });
+    return await this.findOne(id)
+  }
 
 
   async remove(id: number) {
-  await this.userFinder(this.userModel, { where: { userId: id } })
-  return await this.userModel.destroy({ where: { userId: id } })
-}
+    await this.userFinder({ where: { userId: id } })
+    return await this.userModel.destroy({ where: { userId: id } })
+  }
 }
