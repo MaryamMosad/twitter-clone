@@ -14,16 +14,20 @@ export class TweetsResolver {
 
   @UseGuards(AuthGuard)
   @Mutation(() => Tweet)
-  createTweet(@Args('createTweetInput') createTweetInput: CreateTweetInput) {
-    return this.tweetsService.create(createTweetInput);
+  createTweet(
+    @Args('createTweetInput') createTweetInput: CreateTweetInput,
+    @CurrentUser('userId') userId: string,
+  ) {
+    return this.tweetsService.createTweet(createTweetInput, userId);
   }
 
   @Query(() => [Tweet], { name: 'tweets' })
   findTweets(@Args() args: PaginationArgs) {
     return this.tweetsService.findAll(args);
   }
+
   @Query(() => [Tweet], { name: 'UserTweets' })
-  findTweetsByUser(@Args('id', { type: () => Int },) id: number){
+  findTweetsByUser(@Args('id', { type: () => Int }) id: number) {
     return this.tweetsService.findTweetsByUser(id);
   }
 
@@ -31,12 +35,13 @@ export class TweetsResolver {
   findTweet(@Args('id', { type: () => Int }) id: number) {
     return this.tweetsService.findOne(id);
   }
+
   @UseGuards(AuthGuard)
-  @Mutation(() => String)
-  async removeTweet(@CurrentUser()  user: User,
+  @Mutation(() => Boolean)
+  async removeTweet(
+    @CurrentUser() user: User,
     @Args('id', { type: () => Int }) id: number,
   ) {
-    await this.tweetsService.remove(user.userId,id);
-    return "Tweet deleted"
+    await this.tweetsService.removeTweet(user.userId, id);
   }
 }

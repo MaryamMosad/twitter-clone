@@ -1,25 +1,32 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Model,Table, Column, ForeignKey,BelongsTo } from 'sequelize-typescript';
+import {
+  Model,
+  Table,
+  Column,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
 import { User } from '../../users/entities/user.entity';
 
 @Table
 @ObjectType()
-export class Tweet extends Model{
-  @Column({primaryKey: true,autoIncrement:true})
+export class Tweet extends Model {
+  @Column({ primaryKey: true, autoIncrement: true })
   @Field(() => Int)
   tweetId: number;
 
   @Column
-  text:string;
+  @Field()
+  text: string;
 
   @Column
-  createdAt:Date ;
+  createdAt: Date;
 
-  @ForeignKey(type=> User)
+  @ForeignKey((type) => User)
   @Column
   @Field(() => Int)
-  userId:number;
+  userId: number;
 
   @BelongsTo(() => User)
-  user: User
+  user: User;
 }

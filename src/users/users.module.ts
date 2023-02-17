@@ -10,7 +10,8 @@ import { FollowService } from '../follow/follow.service';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [SequelizeModule.forFeature([User, Tweet, Follow]),
+  imports: [
+    SequelizeModule.forFeature([User, Tweet, Follow]),
   JwtModule.register({
     secret: 'SecretKEYYY',
     signOptions: { expiresIn: '12h' }

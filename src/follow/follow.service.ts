@@ -1,42 +1,30 @@
-import { GoneException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from '../users/entities/user.entity';
+import { CreateFollowInput } from './dto/create-follow.input';
 import { Follow } from './entities/follow.entity';
 
 @Injectable()
 export class FollowService {
-  constructor(
-    @InjectModel(Follow)
-    private followModel: typeof Follow,
-    @InjectModel(User)
-    private userModel: typeof User,
-  ) { }
+  constructor(@InjectModel(Follow) private followModel: typeof Follow) {}
 
-  //create new follow entry if it doesn't exist and delete if it exists
-  async create(createFollowInput) {
-    const followStatus = await this.followModel.findOne({ where: { followerId: createFollowInput.followerId, followingId: createFollowInput.followingId } });
+  async followUnfollow(createFollowInput: CreateFollowInput, userId: number) {
+    const followStatus = await this.followModel.findOne({
+      where: {
+        followerId: userId,
+        followingId: createFollowInput.followingId,
+      },
+    });
     if (followStatus) {
-      await this.followModel.destroy({ where: { followId: followStatus.followId } })
-      throw new GoneException;
+      return !!(await this.followModel.destroy({
+        where: { followId: followStatus.followId },
+      }));
+    } else {
+      return !!(await this.followModel.create({
+        followerId: userId,
+        ...createFollowInput,
+      }));
     }
-    else {
-      return await this.followModel.create(createFollowInput);
-    }
-  }
-  async findUserFollowers(id: number): Promise<Follow[]> {
-    //const { limit, offset } = args;
-    return this.followModel.findAll({
-      where: { followingId: id }
-      ,//limit:limit,offset:offset
-    })
   }
 
-  //retuens userIds for followed people
-  async findUserFollowings(id: number): Promise<Follow[]> {
-    //const { limit, offset } = args;
-    return this.followModel.findAll({
-      where: { followerId: id }
-      //limit:limit,offset:offset
-    })
-  }
+  //TODO get followers and following list
 }

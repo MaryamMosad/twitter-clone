@@ -1,18 +1,18 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateTweetInput } from './dto/create-tweet.input';
 import { Tweet } from './entities/tweet.entity';
 
 @Injectable()
 export class TweetsService {
-  constructor(
-    @InjectModel(Tweet)
-    private tweetModel: typeof Tweet,
-  ) { }
+  constructor(@InjectModel(Tweet) private tweetModel: typeof Tweet) {}
 
-  //edit to only allow creation for the current user
-  create(createTweetInput: CreateTweetInput) {
-    return this.tweetModel.create(createTweetInput);
+  createTweet(createTweetInput: CreateTweetInput, userId: string) {
+    return this.tweetModel.create({ userId, ...createTweetInput });
   }
 
   async findAll(args): Promise<Tweet[]> {
@@ -21,21 +21,23 @@ export class TweetsService {
   }
 
   async findTweetsByUser(id: number): Promise<Tweet[]> {
-    return this.tweetModel.findAll({ where: { userId: id } })
+    return this.tweetModel.findAll({ where: { userId: id } });
   }
 
   async findOne(id: number): Promise<Tweet> {
-    const tweet = await this.tweetModel.findOne({ where: { tweetId: id } })
+    const tweet = await this.tweetModel.findOne({ where: { tweetId: id } });
     if (!tweet) {
-      throw new NotFoundException;
+      throw new NotFoundException();
     }
     return tweet;
   }
 
-  async remove(userId: number, tweetId: number) {
-    const tweet = await this.findOne(tweetId)
-    if (userId === tweet.userId) { return await this.tweetModel.destroy({ where: { tweetId: tweetId } }) }
-    else
-      throw new ForbiddenException("You are not allowed to delete this tweet");
+  async removeTweet(userId: number, tweetId: number) {
+    const tweet = await this.findOne(tweetId);
+    if (userId === tweet.userId) {
+      return !!(await this.tweetModel.destroy({ where: { tweetId: tweetId } }));
+    } else {
+      throw new ForbiddenException('You are not allowed to delete this tweet');
+    }
   }
 }

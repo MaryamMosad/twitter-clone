@@ -4,34 +4,14 @@
 
 type Tweet {
   tweetId: Int!
-  userId: Int!
   text: String!
-  createdAt: DateTime!
-  user: User!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type Follow {
-  followId: Int!
-  followerId: Int!
-  followingId: Int!
-  follower: User!
-  following: User!
+  userId: Int!
 }
 
 type User {
   userId: Int!
-  tweets: [Tweet!]
   username: String!
   email: String!
-  password: String!
-  passwordConfirm: String!
-  followers: [User!]
-  followings: [User!]
 }
 
 type AuthPayload {
@@ -40,10 +20,10 @@ type AuthPayload {
 }
 
 type Query {
-  users(offset: Int = 0, limit: Int = 10): GqlUserResponse!
+  users(offset: Int! = 0, limit: Int! = 10): GqlUserResponse!
   user(id: Int!): GqlUserResponse!
   Profile: GqlUserResponse!
-  tweets(offset: Int = 0, limit: Int = 10): [Tweet!]!
+  tweets(offset: Int! = 0, limit: Int! = 10): [Tweet!]!
   UserTweets(id: Int!): [Tweet!]!
   tweet(id: Int!): Tweet!
 }
@@ -57,13 +37,17 @@ type GqlUserResponse {
 }
 
 type Mutation {
+  Follow_Unfollow(createFollowInput: CreateFollowInput!): Boolean!
   signUp(createUserInput: CreateUserInput!): User!
-  login(password: String!, username: String!): AuthPayload!
+  login(username: String!, password: String!): AuthPayload!
   updateUser(updateUserInput: UpdateUserInput!): GqlUserResponse!
   removeUser: String!
   createTweet(createTweetInput: CreateTweetInput!): Tweet!
-  removeTweet(id: Int!): String!
-  Follow_Unfollow(createFollowInput: CreateFollowInput!): Follow!
+  removeTweet(id: Int!): Boolean!
+}
+
+input CreateFollowInput {
+  followingId: Int!
 }
 
 input CreateUserInput {
@@ -83,10 +67,4 @@ input UpdateUserInput {
 
 input CreateTweetInput {
   text: String!
-  userId: Int!
-}
-
-input CreateFollowInput {
-  followerId: Int!
-  followingId: Int!
 }

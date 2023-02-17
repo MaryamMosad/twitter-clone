@@ -1,29 +1,33 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Column, ForeignKey, Table,BelongsTo, Model } from 'sequelize-typescript';
+import {
+  Column,
+  ForeignKey,
+  Table,
+  BelongsTo,
+  Model,
+} from 'sequelize-typescript';
 import { User } from '../../users/entities/user.entity';
 
 @Table
 @ObjectType()
-export class Follow extends Model{
-  @Column({primaryKey: true,autoIncrement:true})
+export class Follow extends Model {
+  @Column({ primaryKey: true, autoIncrement: true })
   @Field(() => Int)
   followId: number;
 
-  //the person who follows another user
-  @ForeignKey(type=> User)
+  @ForeignKey((type) => User)
   @Column
   @Field(() => Int)
-  followerId:number;
+  followerId: number;
 
   @BelongsTo(() => User)
-  follower: User
+  follower: User;
 
-  //the person to be followed
-  @ForeignKey(type=> User)
+  @ForeignKey((type) => User)
   @Column
   @Field(() => Int)
-  followingId:number;
+  followingId: number;
 
   @BelongsTo(() => User)
-  following: User
+  following: User;
 }

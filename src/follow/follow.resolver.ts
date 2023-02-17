@@ -4,28 +4,18 @@ import { Follow } from './entities/follow.entity';
 import { CreateFollowInput } from './dto/create-follow.input';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
-import { PaginationArgs } from '../common/pagination-args.dto';
-
+import { CurrentUser } from 'src/common/user.decorator';
 
 @UseGuards(AuthGuard)
 @Resolver(() => Follow)
 export class FollowResolver {
-  constructor(private readonly followService: FollowService) { }
+  constructor(private readonly followService: FollowService) {}
 
-  @Mutation(() => Follow)
-  Follow_Unfollow(@Args('createFollowInput') createFollowInput: CreateFollowInput) {
-    return this.followService.create(createFollowInput);
+  @Mutation(() => Boolean)
+  Follow_Unfollow(
+    @Args('createFollowInput') createFollowInput: CreateFollowInput,
+    @CurrentUser('userId') userId: number,
+  ) {
+    return this.followService.followUnfollow(createFollowInput, userId);
   }
-
-  /*@Query(() => [Follow], { name: 'UserFollowers' })
-  Followers(@Args() args: PaginationArgs,
-    @Args('id', { type: () => Int }) id: number){
-    return this.followService.findUserFollowers(id);
-  }
-  @Query(() => [Follow], { name: 'UserFollowings' })
-  Followings(@Args() args: PaginationArgs,
-  @Args('id', { type: () => Int }) id: number){
-    return this.followService.findUserFollowings(id);
-  }
-  */
 }
